@@ -14,15 +14,13 @@ namespace Grafos
             LinkedNumbers = new List<int>();
         }
 
-        public bool Exists(int numberToSearch, List<DirectedGraph> list)
+
+        public bool RemainingNodesExist(List<DirectedGraph> list,DirectedGraph node)
         {
-            foreach(var number in list)
+            int numbersConnected = node.LinkedNumbers.Count;
+            if (numbersConnected != list.Count)
             {
-                if (number.Number.Equals(numberToSearch))
-                {
-                    return true;
-                }
-          
+                return true;
             }
             return false;
         }

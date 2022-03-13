@@ -20,7 +20,7 @@ namespace Grafos
             {
                 case "1":
                     addDirectedNode();
-         
+                    showMenu();
                     break;
                 case "2":
                     removeDirectedNode();
@@ -50,12 +50,12 @@ namespace Grafos
                     if (directedGraphs.Count > 0)
                     {
                         string connectedNode = "";
-                        while (!connectedNode.Equals("0"))
+                        while (!connectedNode.Equals("0") && directedNode.RemainingNodesExist(directedGraphs,directedNode))
                         {
                             Console.WriteLine("Este no se conecta com qual dos ja existentes nos? (DIGITE 0 QUANDO NAO TIVER MAIS ITENS PARA CONECTAR)");
                             connectedNode = Console.ReadLine();
                             var numberForConnection = Convert.ToInt32(connectedNode);
-                            if (directedNode.Exists(numberForConnection, directedGraphs))
+                            if (Exists(numberForConnection, directedGraphs))
                             {
                                 directedNode.LinkedNumbers.Add(numberForConnection);
                             }
@@ -80,6 +80,14 @@ namespace Grafos
             }
             void removeDirectedNode() {
                 Console.WriteLine("Removendo...");
+                Console.WriteLine("Qual no voce deseja remover?");
+                var userInput = Convert.ToInt32(Console.ReadLine());
+                if (Exists(userInput, directedGraphs))
+                {
+                    var itemToRemove = directedGraphs.SingleOrDefault(r => r.Number.Equals(userInput));
+                    directedGraphs.Remove(itemToRemove);
+                }
+                
             }
             void addUndirectedNode() {
                 Console.WriteLine("Adicionando...");
@@ -93,8 +101,24 @@ namespace Grafos
                  "1-Adicionar No \n" +
                  "2-Remover No \n" +
                  "3-Adicionar No direcionado \n" +
-                 "4-Remover No direcionado \n"
+                 "4-Remover No direcionado \n"+
+                 "5-Adicionar conexao a um no especifico \n"+
+                 "6-Remover conexao de um no especifico"
                 );
+            }
+
+
+            bool Exists(int numberToSearch, List<DirectedGraph> list)
+            {
+                foreach (var number in list)
+                {
+                    if (number.Number.Equals(numberToSearch))
+                    {
+                        return true;
+                    }
+
+                }
+                return false;
             }
         }
     }
