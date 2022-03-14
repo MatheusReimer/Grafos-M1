@@ -24,20 +24,20 @@ namespace Grafos
                 bool adding = true;
                 while (adding)
                 {
-                    contDirected++;
-                    var directedNode = new DirectedGraph();
-                    directedNode.Number = contDirected;
-                    if (directedGraphs.Count > 0)
+                    contUndirected++;
+                    var undirectedNode = new UndirectedGraph();
+                    undirectedNode.Number = contUndirected;
+                    if (undirectedGraphs.Count > 0)
                     {
                         string connectedNode = "";
-                        while (!connectedNode.Equals("0") && directedNode.RemainingNodesExist(directedGraphs,directedNode))
+                        while (!connectedNode.Equals("0") && undirectedNode.RemainingNodesExist(undirectedGraphs, undirectedNode))
                         {
                             Console.WriteLine("Este no se conecta com qual dos ja existentes nos? (DIGITE 0 QUANDO NAO TIVER MAIS ITENS PARA CONECTAR)");
                             connectedNode = Console.ReadLine();
                             var numberForConnection = Convert.ToInt32(connectedNode);
-                            if (Exists(numberForConnection, directedGraphs))
+                            if (Exists(numberForConnection, undirectedGraphs))
                             {
-                                directedNode.LinkedNumbers.Add(numberForConnection);
+                                undirectedNode.LinkedNumbers.Add(numberForConnection);
                             }
                             else if (numberForConnection.Equals(0)) { }
                             else
@@ -46,7 +46,7 @@ namespace Grafos
                             }
                         }
                     }
-                    directedGraphs.Add(directedNode);
+                    undirectedGraphs.Add(undirectedNode);
                     Console.WriteLine("Continuar adicionando?\n" +
                         "1-Sim\n" +
                         "2-Nao");
@@ -59,17 +59,17 @@ namespace Grafos
                 }
             }
             void removeDirectedNode() {
-                if (directedGraphs.Count.Equals(0)) { Console.WriteLine("ERRO: Nao existem pontos no grafo\n"); return; }
+                if (undirectedGraphs.Count.Equals(0)) { Console.WriteLine("ERRO: Nao existem pontos no grafo\n"); return; }
                 bool removing = true;
-                while (removing && directedGraphs.Count>0)
+                while (removing && undirectedGraphs.Count>0)
                 {
                     Console.WriteLine("Removendo...");
                     Console.WriteLine("Qual no voce deseja remover?");
                     var userInput = Convert.ToInt32(Console.ReadLine());
-                    if (Exists(userInput, directedGraphs))
+                    if (Exists(userInput, undirectedGraphs))
                     {
-                        var itemToRemove = directedGraphs.SingleOrDefault(r => r.Number.Equals(userInput));
-                        directedGraphs.Remove(itemToRemove);
+                        var itemToRemove = undirectedGraphs.SingleOrDefault(r => r.Number.Equals(userInput));
+                        undirectedGraphs.Remove(itemToRemove);
                     }
                     Console.WriteLine("Continuar removendo?");
                     Console.WriteLine("1-Sim\n" +
@@ -100,7 +100,7 @@ namespace Grafos
             }
 
 
-            bool Exists(int numberToSearch, List<DirectedGraph> list)
+            bool Exists(int numberToSearch, List<UndirectedGraph> list)
             {
                 foreach (var number in list)
                 {
@@ -122,6 +122,7 @@ namespace Grafos
                     case "1":
                         addDirectedNode();
                         mainMenuSwitch();
+                        //printMatrix
                         break;
                     case "2":
                         removeDirectedNode();

@@ -5,8 +5,25 @@ namespace Grafos
 {
     public class UndirectedGraph
     {
-        public int Number;
+        public int Number { get; set; }
 
-        public List<int> LinkedNumbers = new List<int>();
+        public List<int> LinkedNumbers { get; set; }
+
+        public UndirectedGraph()
+        {
+            Number = Number;
+            LinkedNumbers = new List<int>();
+        }
+
+
+        public bool RemainingNodesExist(List<UndirectedGraph> list, UndirectedGraph node)
+        {
+            int numbersConnected = node.LinkedNumbers.Count;
+            if (numbersConnected != list.Count)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
