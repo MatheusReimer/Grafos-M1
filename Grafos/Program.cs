@@ -9,32 +9,12 @@ namespace Grafos
         static void Main(string[] args)
         {
             Console.WriteLine("Bem vindo ao gerador de grafos");
-            showMenu();
             int contDirected = 0;
             int contUndirected = 0;
             ///CRIAR OBJETO -> DENTRO DE CADA OBJETO UMA LISTA DE NOS LINKADOS
             List<DirectedGraph> directedGraphs = new List<DirectedGraph>();
             List<UndirectedGraph> undirectedGraphs = new List<UndirectedGraph>();
-            var userAnswer = Console.ReadLine();
-            switch (userAnswer)
-            {
-                case "1":
-                    addDirectedNode();
-                    showMenu();
-                    break;
-                case "2":
-                    removeDirectedNode();
-                    break;
-                case "3":
-                    addUndirectedNode();
-                    break;
-                case "4":
-                    removeUndirectedNode();
-                    break;
-                default:
-                    Console.WriteLine("Por favor, selecione uma opcao valida");
-                    break;
-            }
+            mainMenuSwitch();
             
             Console.ReadKey();
 
@@ -62,7 +42,7 @@ namespace Grafos
                             else if (numberForConnection.Equals(0)) { }
                             else
                             {
-                                Console.WriteLine("Este numero nao é valido...Por favor, digite um no existente");
+                                Console.WriteLine("ERRO: Este numero nao é valido...Por favor, digite um no existente");
                             }
                         }
                     }
@@ -79,15 +59,27 @@ namespace Grafos
                 }
             }
             void removeDirectedNode() {
-                Console.WriteLine("Removendo...");
-                Console.WriteLine("Qual no voce deseja remover?");
-                var userInput = Convert.ToInt32(Console.ReadLine());
-                if (Exists(userInput, directedGraphs))
+                if (directedGraphs.Count.Equals(0)) { Console.WriteLine("ERRO: Nao existem pontos no grafo\n"); return; }
+                bool removing = true;
+                while (removing && directedGraphs.Count>0)
                 {
-                    var itemToRemove = directedGraphs.SingleOrDefault(r => r.Number.Equals(userInput));
-                    directedGraphs.Remove(itemToRemove);
+                    Console.WriteLine("Removendo...");
+                    Console.WriteLine("Qual no voce deseja remover?");
+                    var userInput = Convert.ToInt32(Console.ReadLine());
+                    if (Exists(userInput, directedGraphs))
+                    {
+                        var itemToRemove = directedGraphs.SingleOrDefault(r => r.Number.Equals(userInput));
+                        directedGraphs.Remove(itemToRemove);
+                    }
+                    Console.WriteLine("Continuar removendo?");
+                    Console.WriteLine("1-Sim\n" +
+                        "2-Nao");
+                    var isStillRunning = Console.ReadLine();
+                    if (isStillRunning.ToString().Equals("2") || isStillRunning.ToString().Equals("Nao"))
+                    {
+                        removing = false;
+                    }
                 }
-                
             }
             void addUndirectedNode() {
                 Console.WriteLine("Adicionando...");
@@ -119,6 +111,32 @@ namespace Grafos
 
                 }
                 return false;
+            }
+
+            void mainMenuSwitch()
+            {
+                showMenu();
+                var userAnswer = Console.ReadLine();
+                switch (userAnswer)
+                {
+                    case "1":
+                        addDirectedNode();
+                        mainMenuSwitch();
+                        break;
+                    case "2":
+                        removeDirectedNode();
+                        mainMenuSwitch();
+                        break;
+                    case "3":
+                        addUndirectedNode();
+                        break;
+                    case "4":
+                        removeUndirectedNode();
+                        break;
+                    default:
+                        Console.WriteLine("Por favor, selecione uma opcao valida");
+                        break;
+                }
             }
         }
     }
