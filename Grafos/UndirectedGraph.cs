@@ -3,7 +3,7 @@
 
 namespace Grafos
 {
-    public class UndirectedGraph
+    public class UndirectedGraph: AbstractGraphs<UndirectedGraph>
     {
         public int Number { get; set; }
 
@@ -15,8 +15,7 @@ namespace Grafos
             LinkedNumbers = new List<int>();
         }
 
-
-        public bool RemainingNodesExist(List<UndirectedGraph> list, UndirectedGraph node)
+        public override bool RemainingNodesExist(List<UndirectedGraph> list, UndirectedGraph node)
         {
             int numbersConnected = node.LinkedNumbers.Count;
             if (numbersConnected != list.Count)
@@ -25,5 +24,7 @@ namespace Grafos
             }
             return false;
         }
+
+        
     }
 }
