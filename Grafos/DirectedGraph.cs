@@ -8,10 +8,20 @@ namespace Grafos
         public int Number { get; set; }
         public List<int> LinkedNumbers { get; set; }
 
+        public DirectedGraph()
+        {
+            Number = Number;
+            LinkedNumbers = new List<int>();
+        }
 
         public override bool RemainingNodesExist(List<DirectedGraph> list, DirectedGraph node)
         {
-            throw new System.NotImplementedException();
+            int numbersConnected = node.LinkedNumbers.Count;
+            if (numbersConnected != list.Count)
+            {
+                return true;
+            }
+            return false;
         }
     }
 

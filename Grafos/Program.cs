@@ -18,7 +18,7 @@ namespace Grafos
             List<UndirectedGraph> undirectedGraphs = new List<UndirectedGraph>();
             mainMenuSwitch();
             
-            Console.ReadKey();
+       
 
 
             void addDirectedNode() {
@@ -26,21 +26,21 @@ namespace Grafos
                 bool adding = true;
                 while (adding)
                 {
-                    contUndirected++;
-                    var undirectedNode = new UndirectedGraph();
-                    undirectedNode.Number = contUndirected;
+                    contDirected++;
+                    var directedNode = new DirectedGraph();
+                    directedNode.Number = contDirected;
                     
-                    if (undirectedGraphs.Count > 0)
+                    if (directedGraphs.Count > 0)
                     {
                         string connectedNode = "";
-                        while (!connectedNode.Equals("0") && undirectedNode.RemainingNodesExist(undirectedGraphs, undirectedNode))
+                        while (!connectedNode.Equals("0") && directedNode.RemainingNodesExist(directedGraphs, directedNode))
                         {
                             Console.WriteLine("Este no se conecta com qual dos ja existentes nos? (DIGITE 0 QUANDO NAO TIVER MAIS ITENS PARA CONECTAR)");
                             connectedNode = Console.ReadLine();
                             var numberForConnection = Convert.ToInt32(connectedNode);
-                            if (Exists(numberForConnection, undirectedGraphs) && numberForConnection != contUndirected)
+                            if (Exists(numberForConnection, directedGraphs) && numberForConnection != contDirected)
                             {
-                                undirectedNode.LinkedNumbers.Add(numberForConnection);
+                                directedNode.LinkedNumbers.Add(numberForConnection);
                             }
                             else if (numberForConnection.Equals(0)) { }
                             else
@@ -49,34 +49,53 @@ namespace Grafos
                             }
                         }
                     }
-                    if (undirectedNode.LinkedNumbers.Count.Equals(0)) {
-                        undirectedNode.LinkedNumbers.Add(0);
-                    }
-                    undirectedGraphs.Add(undirectedNode);
+
+                    directedGraphs.Add(directedNode);
                     Console.WriteLine("Continuar adicionando?\n" +
                         "1-Sim\n" +
                         "2-Nao");
                     var defineAdding = Console.ReadLine();
                     if (defineAdding.ToString().Equals("Nao") || defineAdding.ToString().Equals("2"))
                     {
-                        create2dMatrix(undirectedGraphs);
+                        create2dMatrix(directedGraphs);
                         adding = false;
                     }
      
                 }
             }
             void removeDirectedNode() {
-                if (undirectedGraphs.Count.Equals(0)) { Console.WriteLine("ERRO: Nao existem pontos no grafo\n"); return; }
+                if (directedGraphs.Count.Equals(0)) { Console.WriteLine("ERRO: Nao existem pontos no grafo\n"); return; }
                 bool removing = true;
-                while (removing && undirectedGraphs.Count>0)
+                while (removing && directedGraphs.Count>0)
                 {
                     Console.WriteLine("Removendo...");
                     Console.WriteLine("Qual no voce deseja remover?");
                     var userInput = Convert.ToInt32(Console.ReadLine());
-                    if (Exists(userInput, undirectedGraphs))
+                    if (Exists(userInput, directedGraphs))
                     {
-                        var itemToRemove = undirectedGraphs.SingleOrDefault(r => r.Number.Equals(userInput));
-                        undirectedGraphs.Remove(itemToRemove);
+                        var itemToRemove = directedGraphs.SingleOrDefault(r => r.Number.Equals(userInput));
+                        directedGraphs.Remove(itemToRemove);
+                        //FOR EVERY GRAPH THAT HAS NUMBER GREATHER THAN THE REMOVED ONE
+                        foreach(var item in directedGraphs) if (item.Number > userInput)
+                            {
+                                item.Number--;
+                            }
+                        foreach(var item in directedGraphs)
+                        {
+                            foreach(var linked in item.LinkedNumbers) 
+                                {
+                                if (linked > userInput)
+                                {
+                                    linked--;
+                                }else if(linked==userInput){
+                                    linked = 0;
+                                }
+
+                                }
+                            item.LinkedNumbers.ToList().ForEach(s=>s--);
+                        }
+                     
+
                     }
                     Console.WriteLine("Continuar removendo?");
                     Console.WriteLine("1-Sim\n" +
@@ -84,6 +103,7 @@ namespace Grafos
                     var isStillRunning = Console.ReadLine();
                     if (isStillRunning.ToString().Equals("2") || isStillRunning.ToString().Equals("Nao"))
                     {
+                        create2dMatrix(directedGraphs);
                         removing = false;
                     }
                 }
@@ -102,12 +122,13 @@ namespace Grafos
                  "3-Adicionar No direcionado \n" +
                  "4-Remover No direcionado \n"+
                  "5-Adicionar conexao a um no especifico \n"+
-                 "6-Remover conexao de um no especifico"
+                 "6-Remover conexao de um no especifico \n"+
+                 "7-Sair"
                 );
             }
 
 
-            bool Exists(int numberToSearch, List<UndirectedGraph> list)
+            bool Exists(int numberToSearch, List<DirectedGraph> list)
             {
                 foreach (var number in list)
                 {
@@ -130,8 +151,6 @@ namespace Grafos
                     case "1":
                         addDirectedNode();
                         mainMenuSwitch();
-                        
-                       
                         break;
                     case "2":
                         removeDirectedNode();
@@ -143,13 +162,15 @@ namespace Grafos
                     case "4":
                         removeUndirectedNode();
                         break;
+                    case "7":
+                        return;
                     default:
                         Console.WriteLine("Por favor, selecione uma opcao valida");
                         break;
                 }
             }
         }
-        public static void create2dMatrix(List<UndirectedGraph> list)
+        public static void create2dMatrix(List<DirectedGraph> list)
         {
             var array = list.ToArray();
             Console.WriteLine("Em meu array list tem: " + array.Length);
@@ -167,30 +188,27 @@ namespace Grafos
             }
             Print2dMatrix(list, array2d);
         }
-        public static void Print2dMatrix(List<UndirectedGraph> list, int[,]array2d)
+        public static void Print2dMatrix(List<DirectedGraph> list, int[,]array2d)
         {
             var array = list.ToArray();
-            Console.WriteLine("Tamanho do array2d" + array2d.Length);
-            Console.WriteLine("Tamanho do outro" + array.Length);
-
-
-            for (int i = 0; i < array2d.Length; i++)
+            for (int i = 0; i < array.Length; i++)
             {
                 foreach (var numberLink in array[i].LinkedNumbers)
                 {
-                    array2d[i, numberLink]=1;
+                    array2d[i, (numberLink-1)]=1;
                 }
             }
-            for(int i = 0; i < array2d.Length; i++)
+            for(int i = 0; i < array.Length; i++)
             {
-                for(int j = 0; j < array2d.Length; j++)
+                for(int j = 0; j < array.Length; j++)
                 {
                     Console.Write(array2d[i, j]);
                 }
                 Console.WriteLine("");
             }
-            }
-        public void printMatrix(List<DirectedGraph> list)
+            Console.WriteLine("");
+        }
+        public void printMatrix(List<UndirectedGraph> list)
         {
             var array = list.ToArray();
             for (int i = 0; i < array.Length; i++)

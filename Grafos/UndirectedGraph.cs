@@ -17,14 +17,7 @@ namespace Grafos
 
         public override bool RemainingNodesExist(List<UndirectedGraph> list, UndirectedGraph node)
         {
-            int numbersConnected = node.LinkedNumbers.Count;
-            if (numbersConnected != list.Count)
-            {
-                return true;
-            }
-            return false;
+            throw new System.NotImplementedException();
         }
-
-        
     }
 }
