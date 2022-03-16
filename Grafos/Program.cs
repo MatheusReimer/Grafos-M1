@@ -128,11 +128,37 @@ namespace Grafos
                 else
                 {
                     Console.WriteLine("Voce deseja:\n" +
+                    "0-Voltar\n"+
                     "1-Retirar relacao\n" +
                     "2-Adicionar relacao");
+                    var userInput = Convert.ToInt32(Console.ReadLine());
+                    while(userInput!=1 && userInput != 2 && userInput != 0)
+                    {
+                        Console.WriteLine("Por favor selecione uma opcao valida");
+                        userInput = Convert.ToInt32(Console.ReadLine());
+                    }
+                    if (userInput.Equals(0)) { return;}
+                    else if (userInput.Equals(1))
+                    {
+                        PrintConections(userInput);
+                    }
+                    else
+                    {
+
+                    }
                 }
         
                 
+            }
+            void PrintConections(int number)
+            {
+                var element = directedGraphs.ElementAt(number+1);
+                Console.Write($"O elemento: {element.Number} possui a(s) seguinte(s) conexao(oes): ");
+                foreach(var x in element.LinkedNumbers)
+                {
+                    Console.Write(" "+x);
+                }
+                Console.WriteLine("");
             }
 
             void addUndirectedNode() {
