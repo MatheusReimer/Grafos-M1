@@ -82,17 +82,17 @@ namespace Grafos
                             }
                         foreach(var item in directedGraphs)
                         {
-                            foreach(var linked in item.LinkedNumbers) 
+                            for(int i = 0; i < item.LinkedNumbers.Count; i++)
+                            {
+                                if (item.LinkedNumbers[i] > userInput)
                                 {
-                                if (linked > userInput)
+                                    item.LinkedNumbers[i]--;
+                                }
+                                else if (item.LinkedNumbers[i].Equals(userInput))
                                 {
-                                    linked--;
-                                }else if(linked==userInput){
-                                    linked = 0;
+                                    item.LinkedNumbers = item.LinkedNumbers.Where(val => val != userInput).ToList();
                                 }
-
-                                }
-                            item.LinkedNumbers.ToList().ForEach(s=>s--);
+                            }
                         }
                      
 
@@ -117,10 +117,10 @@ namespace Grafos
             void showMenu()
             {
                 Console.WriteLine(
-                 "1-Adicionar No \n" +
-                 "2-Remover No \n" +
-                 "3-Adicionar No direcionado \n" +
-                 "4-Remover No direcionado \n"+
+                 "1-Adicionar No direcionado \n" +
+                 "2-Remover No direcionado\n" +
+                 "3-Adicionar No  \n" +
+                 "4-Remover No  \n"+
                  "5-Adicionar conexao a um no especifico \n"+
                  "6-Remover conexao de um no especifico \n"+
                  "7-Sair"
