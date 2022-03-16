@@ -82,20 +82,26 @@ namespace Grafos
                             }
                         foreach(var item in directedGraphs)
                         {
+                            
                             for(int i = 0; i < item.LinkedNumbers.Count; i++)
                             {
                                 if (item.LinkedNumbers[i] > userInput)
                                 {
                                     item.LinkedNumbers[i]--;
                                 }
-                                else if (item.LinkedNumbers[i].Equals(userInput))
+                                else if(item.LinkedNumbers[i].Equals(userInput) && item.LinkedNumbers.Count.Equals(1))
+                                {
+                                    item.LinkedNumbers = item.LinkedNumbers.Where(val => val != userInput).ToList();
+                                }
+                                //instead of removing the one that is equal, we need to remove the next one.
+                                ///Why is that?
+                                ///Because by removing the one that is equal, the size of the list decreases and makes the next one to remain the same
+                                else if (item.LinkedNumbers[i].Equals(userInput+1) && item.LinkedNumbers.Count>1)
                                 {
                                     item.LinkedNumbers = item.LinkedNumbers.Where(val => val != userInput).ToList();
                                 }
                             }
                         }
-                     
-
                     }
                     Console.WriteLine("Continuar removendo?");
                     Console.WriteLine("1-Sim\n" +
@@ -108,6 +114,27 @@ namespace Grafos
                     }
                 }
             }
+            void modifyDirectedNode()
+            {
+                Console.WriteLine("Qual no voce gostaria de modificar?");
+                var modifyNode = Convert.ToInt32(Console.ReadLine());
+                
+                while (!Exists(modifyNode, directedGraphs) && !modifyNode.Equals(0)){
+                    Console.WriteLine("ERRO: Selecione um numero de um no que existe\n"+"DIGITE 0 PARA VOLTAR");
+                    modifyNode = Convert.ToInt32(Console.ReadLine());
+
+                }
+                if (modifyNode.Equals(0)) { }
+                else
+                {
+                    Console.WriteLine("Voce deseja:\n" +
+                    "1-Retirar relacao\n" +
+                    "2-Adicionar relacao");
+                }
+        
+                
+            }
+
             void addUndirectedNode() {
                 Console.WriteLine("Adicionando...");
             }
@@ -119,11 +146,12 @@ namespace Grafos
                 Console.WriteLine(
                  "1-Adicionar No direcionado \n" +
                  "2-Remover No direcionado\n" +
-                 "3-Adicionar No  \n" +
-                 "4-Remover No  \n"+
-                 "5-Adicionar conexao a um no especifico \n"+
-                 "6-Remover conexao de um no especifico \n"+
-                 "7-Sair"
+                 "3-Modificar as conexoes de um no direcionado\n"+
+                 "4-Adicionar No  \n" +
+                 "5-Remover No  \n"+
+                 "6-Adicionar conexao a um no especifico \n"+
+                 "7-Remover conexao de um no especifico \n"+
+                 "8-Sair"
                 );
             }
 
@@ -157,12 +185,16 @@ namespace Grafos
                         mainMenuSwitch();
                         break;
                     case "3":
-                        addUndirectedNode();
+                        modifyDirectedNode();
+                        mainMenuSwitch();
                         break;
                     case "4":
+                        addUndirectedNode();
+                        break;
+                    case "5":
                         removeUndirectedNode();
                         break;
-                    case "7":
+                    case "8":
                         return;
                     default:
                         Console.WriteLine("Por favor, selecione uma opcao valida");
