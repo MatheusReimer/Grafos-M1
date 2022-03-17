@@ -16,7 +16,7 @@ namespace Grafos
             ///CRIAR OBJETO -> DENTRO DE CADA OBJETO UMA LISTA DE NOS LINKADOS
             List<DirectedGraph> directedGraphs = new List<DirectedGraph>();
             List<UndirectedGraph> undirectedGraphs = new List<UndirectedGraph>();
-            mainMenuSwitch();
+            MainMenuSwitch();
             
        
 
@@ -114,17 +114,16 @@ namespace Grafos
                     }
                 }
             }
-            void modifyDirectedNode()
+            void ModifyDirectedNode()
             {
                 Console.WriteLine("Qual no voce gostaria de modificar?");
-                var modifyNode = Convert.ToInt32(Console.ReadLine());
-                
-                while (!Exists(modifyNode, directedGraphs) && !modifyNode.Equals(0)){
+                var modifyConection = Convert.ToInt32(Console.ReadLine());
+                while (!Exists(modifyConection, directedGraphs) && !modifyConection.Equals(0)){
                     Console.WriteLine("ERRO: Selecione um numero de um no que existe\n"+"DIGITE 0 PARA VOLTAR");
-                    modifyNode = Convert.ToInt32(Console.ReadLine());
+                    modifyConection = Convert.ToInt32(Console.ReadLine());
 
                 }
-                if (modifyNode.Equals(0)) { }
+                if (modifyConection.Equals(0)) { }
                 else
                 {
                     Console.WriteLine("Voce deseja:\n" +
@@ -140,34 +139,83 @@ namespace Grafos
                     if (userInput.Equals(0)) { return;}
                     else if (userInput.Equals(1))
                     {
-                        PrintConections(userInput);
+                        PrintConections(modifyConection);
+                        RemoveConection(modifyConection);
                     }
                     else
                     {
-
+                        AddConnection(modifyConection);
                     }
+
                 }
         
                 
             }
-            void PrintConections(int number)
+            void AddConnection(int number)
             {
-                var element = directedGraphs.ElementAt(number+1);
+                var element = directedGraphs[number - 1];
+                Console.WriteLine("Voce quer fazer uma conexao com qual dos nos?");
+                var toAddTo = Convert.ToInt32(Console.ReadLine());
+                
+                while( toAddTo.Equals(number))
+                {
+                    Console.WriteLine("ERRO: O numero nao pode se conectar com ele mesmo, tente novamente");
+                    toAddTo = Convert.ToInt32(Console.ReadLine());
+                }
+                if (Exists(toAddTo,directedGraphs))
+                {
+                    element.LinkedNumbers.Add(toAddTo);
+                }
+                else
+                {
+                    Console.WriteLine("ERRO: O no que voce esta tentando se conectar nao existe");
+                }
+            }
+
+        void RemoveConection(int modifyNode)
+            {
+                string elementToRemove;
+                var element = directedGraphs[modifyNode - 1];
+                Console.WriteLine("");
+                if (element.LinkedNumbers.Count > 1)
+                {
+                    elementToRemove = "";
+                    Console.WriteLine("Qual das conexoes acima voce deseja remover?");
+                    elementToRemove = Console.ReadLine();
+                    while (elementToRemove != "" && !elementToRemove.Contains(elementToRemove))
+                    {
+                        Console.WriteLine("Informe uma conexao valida");
+                        elementToRemove = Console.ReadLine();
+                    }
+                }
+                else if (element.LinkedNumbers.Count.Equals(0))
+                {
+                    Console.WriteLine("ERRO: Nenhuma conexao para remover");
+                    return;
+                }
+                else
+                {
+                    elementToRemove = element.LinkedNumbers.First().ToString();
+                }
+                element.LinkedNumbers.Remove(Convert.ToInt32(elementToRemove));
+            }
+            void PrintConections(int number)
+            { 
+                var element = directedGraphs[number-1];
                 Console.Write($"O elemento: {element.Number} possui a(s) seguinte(s) conexao(oes): ");
                 foreach(var x in element.LinkedNumbers)
                 {
                     Console.Write(" "+x);
-                }
-                Console.WriteLine("");
+                }    
             }
 
-            void addUndirectedNode() {
+            void AddUndirectedNode() {
                 Console.WriteLine("Adicionando...");
             }
-            void removeUndirectedNode() {
+            void RemoveUndirectedNode() {
                 Console.WriteLine("Removendo...");
             }
-            void showMenu()
+            void ShowMenu()
             {
                 Console.WriteLine(
                  "1-Adicionar No direcionado \n" +
@@ -177,10 +225,21 @@ namespace Grafos
                  "5-Remover No  \n"+
                  "6-Adicionar conexao a um no especifico \n"+
                  "7-Remover conexao de um no especifico \n"+
-                 "8-Sair"
+                 "8-Printar meu grafo \n" +
+                 "9-Sair"
                 );
             }
-
+            void PrintMyGraph()
+            {
+                Console.WriteLine("1-Printar grafo direcionado\n" +
+                    "2- Printar grafo nao direcionado?");
+                var userInput = Convert.ToInt32(Console.ReadLine());
+                if (userInput.Equals(1))
+                {
+                    create2dMatrix(directedGraphs);
+                }
+                
+            }
 
             bool Exists(int numberToSearch, List<DirectedGraph> list)
             {
@@ -195,32 +254,36 @@ namespace Grafos
                 return false;
             }
 
-            void mainMenuSwitch()
+            void MainMenuSwitch()
             {
-                showMenu();
+                ShowMenu();
                 var userAnswer = Console.ReadLine();
                
                 switch (userAnswer)
                 {
                     case "1":
                         addDirectedNode();
-                        mainMenuSwitch();
+                        MainMenuSwitch();
                         break;
                     case "2":
                         removeDirectedNode();
-                        mainMenuSwitch();
+                        MainMenuSwitch();
                         break;
                     case "3":
-                        modifyDirectedNode();
-                        mainMenuSwitch();
+                        ModifyDirectedNode();
+                        MainMenuSwitch();
                         break;
                     case "4":
-                        addUndirectedNode();
+                        AddUndirectedNode();
                         break;
                     case "5":
-                        removeUndirectedNode();
+                        RemoveUndirectedNode();
                         break;
                     case "8":
+                        PrintMyGraph();
+                        MainMenuSwitch();
+                        break;
+                    case "9":
                         return;
                     default:
                         Console.WriteLine("Por favor, selecione uma opcao valida");
@@ -228,6 +291,7 @@ namespace Grafos
                 }
             }
         }
+        
         public static void create2dMatrix(List<DirectedGraph> list)
         {
             var array = list.ToArray();
