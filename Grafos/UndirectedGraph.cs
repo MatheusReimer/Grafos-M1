@@ -3,17 +3,18 @@
 
 namespace Grafos
 {
-    public class UndirectedGraph: AbstractGraphs<UndirectedGraph>
+    public class UndirectedGraph: AbstractGraphs<UndirectedGraph> , IGraphs
     {
-        public int Number { get; set; }
 
-        public List<int> LinkedNumbers { get; set; }
 
         public UndirectedGraph()
         {
             Number = Number;
             LinkedNumbers = new List<int>();
         }
+
+        public int Number { get; set; }
+        public List<int> LinkedNumbers { get; set; }
 
         public override bool RemainingNodesExist(List<UndirectedGraph> list, UndirectedGraph node)
         {
