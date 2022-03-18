@@ -211,7 +211,33 @@ namespace Grafos
 
             void AddUndirectedNode() {
                 Console.WriteLine("Adicionando...");
-            }
+                bool adding = true;
+                while (adding)
+                {
+                    contUndirected++;
+                    var undirectedNode = new UndirectedGraph();
+                    undirectedNode.Number = contDirected;
+
+                    if (directedGraphs.Count > 0)
+                    {
+                        string connectedNode = "";
+                        while (!connectedNode.Equals("0") && undirectedNode.RemainingNodesExist(undirectedGraphs, undirectedNode))
+                        {
+                            Console.WriteLine("Este no se conecta com qual dos ja existentes nos? (DIGITE 0 QUANDO NAO TIVER MAIS ITENS PARA CONECTAR)");
+                            connectedNode = Console.ReadLine();
+                            var numberForConnection = Convert.ToInt32(connectedNode);
+                            if (Exists(numberForConnection, directedGraphs) && numberForConnection != contDirected)
+                            {
+                                undirectedNode.LinkedNumbers.Add(numberForConnection);
+                            }
+                            else if (numberForConnection.Equals(0)) { }
+                            else
+                            {
+                                Console.WriteLine("ERRO: Este numero nao é valido...Por favor, digite um no existente e que nao é o proprio valor do no");
+                            }
+                        }
+
+                    }
             void RemoveUndirectedNode() {
                 Console.WriteLine("Removendo...");
             }
