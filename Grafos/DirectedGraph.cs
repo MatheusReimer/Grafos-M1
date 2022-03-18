@@ -3,10 +3,8 @@
 
 namespace Grafos
 {
-    public class DirectedGraph : AbstractGraphs<DirectedGraph>, IGraphs
+    public class DirectedGraph : AbstractGraphs<DirectedGraph>
     {
-        public int Number { get; set; }
-        public List<int> LinkedNumbers { get; set; }
 
         public DirectedGraph()
         {

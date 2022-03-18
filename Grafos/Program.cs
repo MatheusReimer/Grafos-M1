@@ -19,7 +19,42 @@ namespace Grafos
             MainMenuSwitch();
 
 
+            void addNode<T>(List<T> genericList) where T : AbstractGraphs<T>
+            {
+                Console.WriteLine("Adicionando...");
+                bool adding = true;
+                while (adding)
+                {
+                    if (genericList.GetType() == directedGraphs.GetType())
+                    { contDirected++; }
+                    else if (genericList.GetType() == undirectedGraphs.GetType())
+                    { contUndirected++; }
 
+                    T genericNode = (T)Activator.CreateInstance(typeof(T));
+                    genericNode.Number = contDirected;
+
+
+                    if (genericList.Count > 0)
+                    {
+                        string connectedNode = "";
+                        while (!connectedNode.Equals("0") && genericNode.RemainingNodesExist(genericList, genericNode))
+                        {
+                            Console.WriteLine("Este no se conecta com qual dos ja existentes nos? (DIGITE 0 QUANDO NAO TIVER MAIS ITENS PARA CONECTAR)");
+                            connectedNode = Console.ReadLine();
+                            var numberForConnection = Convert.ToInt32(connectedNode);
+                            if (Exists(numberForConnection, genericList) && numberForConnection != contUndirected)
+                            {
+                                genericNode.LinkedNumbers.Add(numberForConnection);
+                            }
+                            else if (numberForConnection.Equals(0)) { }
+                            else
+                            {
+                                Console.WriteLine("ERRO: Este numero nao é valido...Por favor, digite um no existente e que nao é o proprio valor do no");
+                            }
+                        }
+                    }
+                }
+            }
 
             void addDirectedNode()
             {
@@ -110,7 +145,7 @@ namespace Grafos
 
                 }
             }
-            void removeDirectedNode()
+            void RemoveDirectedNode()
             {
                 if (directedGraphs.Count.Equals(0)) { Console.WriteLine("ERRO: Nao existem pontos no grafo\n"); return; }
                 bool removing = true;
@@ -293,7 +328,7 @@ namespace Grafos
 
             }
 
-            bool Exists<T>(int numberToSearch, List<T> list) where T : IGraphs
+            bool Exists<T>(int numberToSearch, List<T> list) where T : AbstractGraphs<T>
             {
                 foreach (var number in list)
                 {
@@ -318,7 +353,7 @@ namespace Grafos
                         MainMenuSwitch();
                         break;
                     case "2":
-                        removeDirectedNode();
+                        RemoveDirectedNode();
                         MainMenuSwitch();
                         break;
                     case "3":
@@ -345,7 +380,7 @@ namespace Grafos
             }
         }
 
-        public static void create2dMatrix<T>(List<T> list) where T : IGraphs
+        public static void create2dMatrix<T>(List<T> list) where T : AbstractGraphs<T>
         {
             var array = list.ToArray();
             Console.WriteLine("Em meu array list tem: " + array.Length);
@@ -363,7 +398,7 @@ namespace Grafos
             }
             Print2dMatrix(list, array2d);
         }
-        public static void Print2dMatrix<T>(List<T> list, int[,] array2d) where T : IGraphs
+        public static void Print2dMatrix<T>(List<T> list, int[,] array2d) where T : AbstractGraphs<T>
         {
             var array = list.ToArray();
             for (int i = 0; i < array.Length; i++)
