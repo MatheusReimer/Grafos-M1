@@ -3,7 +3,7 @@
 
 namespace Grafos
 {
-    public class UndirectedGraph: AbstractGraphs<UndirectedGraph> , IGraphs
+    public class UndirectedGraph : AbstractGraphs<UndirectedGraph>, IGraphs
     {
 
 

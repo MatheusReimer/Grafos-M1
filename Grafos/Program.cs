@@ -64,7 +64,10 @@ namespace Grafos
 
                 }
             }
-            void addUndirectedNode()
+            
+ 
+            
+            void AddUndirectedNode()
             {
                 Console.WriteLine("Adicionando...");
                 bool adding = true;
@@ -255,10 +258,7 @@ namespace Grafos
                 }
             }
 
-            void AddUndirectedNode()
-            {
-                Console.WriteLine("Adicionando...");
-            }
+          
             void RemoveUndirectedNode()
             {
                 Console.WriteLine("Removendo...");
