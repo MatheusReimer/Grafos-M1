@@ -47,6 +47,11 @@ namespace Grafos
                             if (Exists(numberForConnection, genericList) && numberForConnection != genericCont)
                             {
                                 genericNode.LinkedNumbers.Add(numberForConnection);
+                                if (genericList.GetType() == undirectedGraphs.GetType())
+                                {
+                                    ///CREATE LINK BETWEEN OTHER NODES
+                                    undirectedGraphs[numberForConnection].LinkedNumbers.Add(genericNode.Number);
+                                }
                             }
                             else if (numberForConnection.Equals(0)) { }
                             else
