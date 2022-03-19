@@ -123,11 +123,11 @@ namespace Grafos
             }
 
 
-            void ModifyDirectedNode()
+            void ModifyNode<T>(List<T> genericList) where T : AbstractGraphs<T>
             {
                 Console.WriteLine("Qual no voce gostaria de modificar?");
                 var modifyConection = Convert.ToInt32(Console.ReadLine());
-                while (!Exists(modifyConection, directedGraphs) && !modifyConection.Equals(0))
+                while (!Exists(modifyConection, genericList) && !modifyConection.Equals(0))
                 {
                     Console.WriteLine("ERRO: Selecione um numero de um no que existe\n" + "DIGITE 0 PARA VOLTAR");
                     modifyConection = Convert.ToInt32(Console.ReadLine());
@@ -149,21 +149,21 @@ namespace Grafos
                     if (userInput.Equals(0)) { return; }
                     else if (userInput.Equals(1))
                     {
-                        PrintConections(modifyConection);
-                        RemoveConection(modifyConection);
+                        PrintConections(genericList,modifyConection);
+                        RemoveConection(genericList,modifyConection);
                     }
                     else
                     {
-                        AddConnection(modifyConection);
+                        AddConnection(genericList,modifyConection);
                     }
 
                 }
 
 
             }
-            void AddConnection(int number)
+            void AddConnection<T>(List<T> genericList, int number) where T : AbstractGraphs<T>
             {
-                var element = directedGraphs[number - 1];
+                var element = genericList[number - 1];
                 Console.WriteLine("Voce quer fazer uma conexao com qual dos nos?");
                 var toAddTo = Convert.ToInt32(Console.ReadLine());
 
@@ -172,7 +172,7 @@ namespace Grafos
                     Console.WriteLine("ERRO: O numero nao pode se conectar com ele mesmo, tente novamente");
                     toAddTo = Convert.ToInt32(Console.ReadLine());
                 }
-                if (Exists(toAddTo, directedGraphs))
+                if (Exists(toAddTo, genericList))
                 {
                     element.LinkedNumbers.Add(toAddTo);
                 }
@@ -182,10 +182,10 @@ namespace Grafos
                 }
             }
 
-            void RemoveConection(int modifyNode)
+            void RemoveConection<T>(List<T> genericList, int modifyNode) where T : AbstractGraphs<T>
             {
                 string elementToRemove;
-                var element = directedGraphs[modifyNode - 1];
+                var element = genericList[modifyNode - 1];
                 Console.WriteLine("");
                 if (element.LinkedNumbers.Count > 1)
                 {
@@ -209,9 +209,9 @@ namespace Grafos
                 }
                 element.LinkedNumbers.Remove(Convert.ToInt32(elementToRemove));
             }
-            void PrintConections(int number)
+            void PrintConections<T>(List<T> genericList, int number) where T : AbstractGraphs<T>
             {
-                var element = directedGraphs[number - 1];
+                var element = genericList[number - 1];
                 Console.Write($"O elemento: {element.Number} possui a(s) seguinte(s) conexao(oes): ");
                 foreach (var x in element.LinkedNumbers)
                 {
@@ -283,7 +283,7 @@ namespace Grafos
                         MainMenuSwitch();
                         break;
                     case "3":
-                        ModifyDirectedNode();
+                        ModifyNode(directedGraphs);
                         MainMenuSwitch();
                         break;
                     case "4":
