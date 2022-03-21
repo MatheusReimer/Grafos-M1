@@ -416,14 +416,9 @@ namespace Grafos
                     if (elementT.Equals(numberToSearchFor)||queue.Contains(numberToSearchFor)) { Console.WriteLine("Encontrei"); return; }
 
                 }
-
                 Console.WriteLine("Nao encontrei");
                 return;
             }
-
-
-
-
             void PrintMyGraph()
             {
                 Console.WriteLine("1-Printar grafo direcionado\n" +
@@ -437,7 +432,6 @@ namespace Grafos
                 {
                     create2dMatrix(undirectedGraphs);
                 }
-
             }
 
             bool Exists<T>(int numberToSearch, List<T> list) where T : AbstractGraphs<T>
