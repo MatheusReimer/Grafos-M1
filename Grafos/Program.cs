@@ -20,7 +20,7 @@ namespace Grafos
 
 
             void addNode<T>(List<T> genericList) where T : AbstractGraphs<T>
-            
+
             {
                 Console.WriteLine("Adicionando...");
                 bool adding = true;
@@ -29,8 +29,8 @@ namespace Grafos
                     int genericCont;
                     if (genericList.GetType() == directedGraphs.GetType())
                     { contDirected++; genericCont = contDirected; }
-                    else 
-                    { contUndirected++;genericCont = contUndirected; }
+                    else
+                    { contUndirected++; genericCont = contUndirected; }
 
                     T genericNode = (T)Activator.CreateInstance(typeof(T));
                     genericNode.Number = genericCont;
@@ -50,7 +50,7 @@ namespace Grafos
                                 if (genericList.GetType() == undirectedGraphs.GetType())
                                 {
                                     ///CREATE LINK BETWEEN OTHER NODES
-                                    undirectedGraphs[numberForConnection].LinkedNumbers.Add(genericNode.Number);
+                                    genericList[numberForConnection - 1].LinkedNumbers.Add(genericNode.Number);
                                 }
                             }
                             else if (numberForConnection.Equals(0)) { }
@@ -103,6 +103,7 @@ namespace Grafos
                                 }
                                 else if (item.LinkedNumbers[i].Equals(userInput) && item.LinkedNumbers.Count.Equals(1))
                                 {
+                                    //removes
                                     item.LinkedNumbers = item.LinkedNumbers.Where(val => val != userInput).ToList();
                                 }
                                 //instead of removing the one that is equal, we need to remove the next one.
@@ -154,12 +155,12 @@ namespace Grafos
                     if (userInput.Equals(0)) { return; }
                     else if (userInput.Equals(1))
                     {
-                        PrintConections(genericList,modifyConection);
-                        RemoveConection(genericList,modifyConection);
+                        PrintConections(genericList, modifyConection);
+                        RemoveConection(genericList, modifyConection);
                     }
                     else
                     {
-                        AddConnection(genericList,modifyConection);
+                        AddConnection(genericList, modifyConection);
                     }
 
                 }
@@ -180,6 +181,11 @@ namespace Grafos
                 if (Exists(toAddTo, genericList))
                 {
                     element.LinkedNumbers.Add(toAddTo);
+                    if (genericList.GetType().Equals(undirectedGraphs.GetType()))
+                    {
+                        genericList[toAddTo - 1].LinkedNumbers.Add(number);
+                    }
+
                 }
                 else
                 {
@@ -197,7 +203,7 @@ namespace Grafos
                     elementToRemove = "";
                     Console.WriteLine("Qual das conexoes acima voce deseja remover?");
                     elementToRemove = Console.ReadLine();
-                    while (elementToRemove != "" && !elementToRemove.Contains(elementToRemove))
+                    while (elementToRemove != "" && !element.LinkedNumbers.Contains(Convert.ToInt32(elementToRemove)))
                     {
                         Console.WriteLine("Informe uma conexao valida");
                         elementToRemove = Console.ReadLine();
@@ -213,6 +219,11 @@ namespace Grafos
                     elementToRemove = element.LinkedNumbers.First().ToString();
                 }
                 element.LinkedNumbers.Remove(Convert.ToInt32(elementToRemove));
+                if (genericList.GetType().Equals(undirectedGraphs.GetType()))
+                {
+                    var index = (Convert.ToInt32(elementToRemove)) - 1;
+                    genericList[index].LinkedNumbers.Remove(modifyNode);
+                }
             }
             void PrintConections<T>(List<T> genericList, int number) where T : AbstractGraphs<T>
             {
@@ -224,7 +235,7 @@ namespace Grafos
                 }
             }
 
-          
+
             void RemoveUndirectedNode()
             {
                 Console.WriteLine("Removendo...");
@@ -235,14 +246,184 @@ namespace Grafos
                  "1-Adicionar No direcionado \n" +
                  "2-Remover No direcionado\n" +
                  "3-Modificar as conexoes de um no direcionado\n" +
-                 "4-Adicionar No  \n" +
-                 "5-Remover No  \n" +
-                 "6-Adicionar conexao a um no especifico \n" +
-                 "7-Remover conexao de um no especifico \n" +
-                 "8-Printar meu grafo \n" +
-                 "9-Sair"
+                 "4-Modificar as conexoes de um no NAO direcionado\n" +
+                 "5-Adicionar No  \n" +
+                 "6-Remover No  \n" +
+                 "7-Busca de profundidade\n" +
+                 "8-Busca em largura\n" +
+                 "9-Printar meu grafo \n" +
+                 "10-Sair"
                 );
             }
+            void Search(int search)
+            {
+                Console.WriteLine("1-Direcionado\n" +
+                    "2-Nao direcionado");
+                var userListChoice = Convert.ToInt32(Console.ReadLine());
+                while(!userListChoice.Equals(1) && !userListChoice.Equals(2))
+                {
+                    Console.WriteLine("Opcao invalida, tente novamente");
+                    userListChoice = Convert.ToInt32(Console.ReadLine());
+                }
+                Console.WriteLine("Qual numero do ponto que voce esta procurando?");
+                var numberToSearchFor = Convert.ToInt32(Console.ReadLine());
+                
+                if (userListChoice.Equals(1) && search.Equals(1)) 
+                {
+
+                    DepthSearch(directedGraphs, numberToSearchFor);
+                }
+                else if(userListChoice.Equals(2) && search.Equals(1))
+                {
+
+                    DepthSearch(undirectedGraphs, numberToSearchFor);
+                }
+                else if(userListChoice.Equals(1) && search.Equals(2))
+                {
+                    BreadthSearch(directedGraphs, numberToSearchFor);
+
+                }
+                else
+                {
+                    BreadthSearch(undirectedGraphs, numberToSearchFor);
+                }
+
+            }
+        
+
+            void DepthSearch<T>(List<T> genericList, int numberToSearchFor) where T : AbstractGraphs<T>
+            {
+                int numberToStart = -1;
+                Console.WriteLine("Qual sera o vertice de partida?");
+                numberToStart = Convert.ToInt32(Console.ReadLine());
+                while (!Exists(numberToStart, genericList)){
+                    Console.WriteLine("Ponto inexistente, tente novamente");
+                    numberToStart = Convert.ToInt32(Console.ReadLine());
+                }
+
+                Stack<int> stack = new Stack<int>();
+                List<int> controllerList = new List<int>();
+                stack.Push(numberToStart);
+                controllerList.Add(numberToStart);
+                var initialObj = genericList.FirstOrDefault(obj => obj.Number.Equals(numberToStart));
+
+                while (controllerList.Count() != genericList.Count())
+                {
+                    while (initialObj.LinkedNumbers.Count > 0 && !initialObj.LinkedNumbers.All(item=> controllerList.Contains(item)))
+                    {
+                        var test = initialObj.LinkedNumbers.All(item => controllerList.Contains(item));
+                        int nextNumber = -1;
+                        for (int i = 0; i < initialObj.LinkedNumbers.Count; i++)
+                        {
+                            if (!controllerList.Contains(initialObj.LinkedNumbers[i]))
+                            {
+                                nextNumber = initialObj.LinkedNumbers[i];
+                            } 
+                        }
+                        var nextObj = genericList.FirstOrDefault(obj => obj.Number.Equals(nextNumber));
+                        stack.Push(nextNumber);
+                        controllerList.Add(nextNumber);
+                        initialObj = nextObj;
+                        if (nextNumber.Equals(numberToSearchFor))
+                        {
+                            Console.WriteLine("Encontrado");
+                            return;
+                        }
+                    }
+                    
+                    if (stack.Count > 0)
+                    {
+                        
+                        initialObj.Number = stack.Peek();
+                        stack.Pop();
+                    }
+                    else
+                    {
+                        T temp = null;
+                        for (int i = 0; i < genericList.Count(); i++)
+                        {
+                            
+                            if (!controllerList.Contains(genericList[i].Number))
+                            {
+                                temp= initialObj;
+                                initialObj = genericList.FirstOrDefault(obj => obj.Number.Equals(genericList[i].Number));
+                                
+                            }
+                        }
+                        if (initialObj != temp)
+                        {
+                            controllerList.Add(initialObj.Number);
+                        }
+                    }
+                    if (initialObj.Number.Equals(numberToSearchFor))
+                    {
+                        Console.WriteLine("Encontrado");
+                        return;
+                    }
+                }
+                Console.WriteLine("Nao encontrado");
+                return;
+            }
+
+            void BreadthSearch<T>(List < T > genericList, int numberToSearchFor) where T : AbstractGraphs<T>
+            {
+                Queue<int> queue = new Queue<int>();
+                List<int> controllerList = new List<int>();
+                var elementT = -1;
+                Console.WriteLine("Qual sera o vertice de partida?");
+                elementT = Convert.ToInt32(Console.ReadLine());
+                while (!Exists(elementT, genericList))
+                {
+                    Console.WriteLine("Ponto inexistente, tente novamente");
+                    elementT = Convert.ToInt32(Console.ReadLine());
+                }
+                controllerList.Add(elementT);
+                
+                while (controllerList.Count() != genericList.Count())
+                {
+                    if (genericList[elementT-1].LinkedNumbers.Count() > 0)
+                    {
+                        for (int i = 0; i < genericList[elementT-1].LinkedNumbers.Count(); i++)
+                        {
+                            elementT = genericList[elementT - 1].LinkedNumbers[i];
+                            if (!queue.Contains(elementT) && !controllerList.Contains(elementT))
+                            {
+                                queue.Enqueue(elementT);
+                            }  
+                        }
+                        elementT = queue.Peek();
+                        controllerList.Add(elementT);
+                        queue.Dequeue();
+
+                    }
+                    else if (queue.Count() > 0)
+                    {
+                        elementT = queue.Peek();
+                        controllerList.Add(elementT);
+                    }
+                    else
+                    {
+                        foreach (var element in genericList)
+                        {
+                            if (!controllerList.Contains(element.Number))
+                            {
+                                elementT = element.Number;
+                                queue.Enqueue(elementT);
+                            }
+                        }
+                        controllerList.Add(elementT);
+                    }
+                    if (elementT.Equals(numberToSearchFor)||queue.Contains(numberToSearchFor)) { Console.WriteLine("Encontrei"); return; }
+
+                }
+
+                Console.WriteLine("Nao encontrei");
+                return;
+            }
+
+
+
+
             void PrintMyGraph()
             {
                 Console.WriteLine("1-Printar grafo direcionado\n" +
@@ -292,17 +473,29 @@ namespace Grafos
                         MainMenuSwitch();
                         break;
                     case "4":
-                        addNode(undirectedGraphs);
+                        ModifyNode(undirectedGraphs);
                         MainMenuSwitch();
                         break;
                     case "5":
+                        addNode(undirectedGraphs);
+                        MainMenuSwitch();
+                        break;
+                    case "6":
                         RemoveUndirectedNode();
                         break;
+                    case "7":
+                        Search(1);
+                        MainMenuSwitch();
+                        break;
                     case "8":
-                        PrintMyGraph();
+                        Search(2);
                         MainMenuSwitch();
                         break;
                     case "9":
+                        PrintMyGraph();
+                        MainMenuSwitch();
+                        break;
+                    case "10":
                         return;
                     default:
                         Console.WriteLine("Por favor, selecione uma opcao valida");
