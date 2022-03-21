@@ -101,15 +101,7 @@ namespace Grafos
                                 {
                                     item.LinkedNumbers[i]--;
                                 }
-                                else if (item.LinkedNumbers[i].Equals(userInput) && item.LinkedNumbers.Count.Equals(1))
-                                {
-                                    //removes
-                                    item.LinkedNumbers = item.LinkedNumbers.Where(val => val != userInput).ToList();
-                                }
-                                //instead of removing the one that is equal, we need to remove the next one.
-                                ///Why is that?
-                                ///Because by removing the one that is equal, the size of the list decreases and makes the next one to remain the same
-                                else if (item.LinkedNumbers[i].Equals(userInput + 1) && item.LinkedNumbers.Count > 1)
+                                else if (item.LinkedNumbers[i].Equals(userInput))
                                 {
                                     item.LinkedNumbers = item.LinkedNumbers.Where(val => val != userInput).ToList();
                                 }
