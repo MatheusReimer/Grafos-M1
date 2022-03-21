@@ -41,7 +41,7 @@ namespace Grafos
                         string connectedNode = "";
                         while (!connectedNode.Equals("0") && genericNode.RemainingNodesExist(genericList, genericNode))
                         {
-                            Console.WriteLine("Este no se conecta com qual dos ja existentes nos? (DIGITE 0 QUANDO NAO TIVER MAIS ITENS PARA CONECTAR)");
+                            Console.WriteLine("Este vertice se conecta com qual dos ja existentes nos? (DIGITE 0 QUANDO NAO TIVER MAIS ITENS PARA CONECTAR)");
                             connectedNode = Console.ReadLine();
                             var numberForConnection = Convert.ToInt32(connectedNode);
                             if (Exists(numberForConnection, genericList) && numberForConnection != genericCont)
@@ -56,7 +56,7 @@ namespace Grafos
                             else if (numberForConnection.Equals(0)) { }
                             else
                             {
-                                Console.WriteLine("ERRO: Este numero nao é valido...Por favor, digite um no existente e que nao é o proprio valor do no");
+                                Console.WriteLine("ERRO: Este numero nao é valido...Por favor, digite um vertice existente e que nao é o proprio valor do vertice");
                             }
                         }
                     }
@@ -81,7 +81,7 @@ namespace Grafos
                 while (removing && genericList.Count > 0)
                 {
                     Console.WriteLine("Removendo...");
-                    Console.WriteLine("Qual no voce deseja remover?");
+                    Console.WriteLine("Qual vertice voce deseja remover?");
                     var userInput = Convert.ToInt32(Console.ReadLine());
                     if (Exists(userInput, genericList))
                     {
@@ -123,11 +123,11 @@ namespace Grafos
 
             void ModifyNode<T>(List<T> genericList) where T : AbstractGraphs<T>
             {
-                Console.WriteLine("Qual no voce gostaria de modificar?");
+                Console.WriteLine("Qual vertice voce gostaria de modificar?");
                 var modifyConection = Convert.ToInt32(Console.ReadLine());
                 while (!Exists(modifyConection, genericList) && !modifyConection.Equals(0))
                 {
-                    Console.WriteLine("ERRO: Selecione um numero de um no que existe\n" + "DIGITE 0 PARA VOLTAR");
+                    Console.WriteLine("ERRO: Selecione um numero de um vertice que existe\n" + "DIGITE 0 PARA VOLTAR");
                     modifyConection = Convert.ToInt32(Console.ReadLine());
 
                 }
@@ -181,7 +181,7 @@ namespace Grafos
                 }
                 else
                 {
-                    Console.WriteLine("ERRO: O no que voce esta tentando se conectar nao existe");
+                    Console.WriteLine("ERRO: O vertice que voce esta tentando se conectar nao existe");
                 }
             }
 
@@ -235,12 +235,12 @@ namespace Grafos
             void ShowMenu()
             {
                 Console.WriteLine(
-                 "1-Adicionar No direcionado \n" +
-                 "2-Remover No direcionado\n" +
-                 "3-Modificar as conexoes de um no direcionado\n" +
-                 "4-Modificar as conexoes de um no NAO direcionado\n" +
-                 "5-Adicionar No  \n" +
-                 "6-Remover No  \n" +
+                 "1-Adicionar vertice direcionado \n" +
+                 "2-Remover vertice direcionado\n" +
+                 "3-Modificar as conexoes de um vertice direcionado\n" +   
+                 "4-Adicionar vertice NAO direcionado  \n" +
+                 "5-Remover vertice NAO direcionado \n" +
+                 "6-Modificar as conexoes de um vertice NAO direcionado\n" +
                  "7-Busca de profundidade\n" +
                  "8-Busca em largura\n" +
                  "9-Printar meu grafo \n" +
@@ -458,16 +458,17 @@ namespace Grafos
                         ModifyNode(directedGraphs);
                         MainMenuSwitch();
                         break;
+
                     case "4":
-                        ModifyNode(undirectedGraphs);
-                        MainMenuSwitch();
-                        break;
-                    case "5":
                         addNode(undirectedGraphs);
                         MainMenuSwitch();
                         break;
-                    case "6":
+                    case "5":
                         RemoveUndirectedNode();
+                        break;
+                    case "6":
+                        ModifyNode(undirectedGraphs);
+                        MainMenuSwitch();
                         break;
                     case "7":
                         Search(1);
