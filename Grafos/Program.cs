@@ -41,7 +41,7 @@ namespace Grafos
                         string connectedNode = "";
                         while (!connectedNode.Equals("0") && genericNode.RemainingNodesExist(genericList, genericNode))
                         {
-                            Console.WriteLine("Este vertice se conecta com qual dos ja existentes nos? (DIGITE 0 QUANDO NAO TIVER MAIS ITENS PARA CONECTAR)");
+                            Console.WriteLine("Este vertice se conecta com qual dos ja existentes vertices? (DIGITE 0 QUANDO NAO TIVER MAIS ITENS PARA CONECTAR)");
                             connectedNode = Console.ReadLine();
                             var numberForConnection = Convert.ToInt32(connectedNode);
                             if (Exists(numberForConnection, genericList) && numberForConnection != genericCont)
@@ -108,6 +108,10 @@ namespace Grafos
                             }
                         }
                     }
+                    else
+                    {
+                        Console.WriteLine("ERRO: Vertice inexistente");
+                    }
                     Console.WriteLine("Continuar removendo?");
                     Console.WriteLine("1-Sim\n" +
                         "2-Nao");
@@ -162,7 +166,7 @@ namespace Grafos
             void AddConnection<T>(List<T> genericList, int number) where T : AbstractGraphs<T>
             {
                 var element = genericList[number - 1];
-                Console.WriteLine("Voce quer fazer uma conexao com qual dos nos?");
+                Console.WriteLine("Voce quer fazer uma conexao com qual dos vertices?");
                 var toAddTo = Convert.ToInt32(Console.ReadLine());
 
                 while (toAddTo.Equals(number))
@@ -227,11 +231,6 @@ namespace Grafos
                 }
             }
 
-
-            void RemoveUndirectedNode()
-            {
-                Console.WriteLine("Removendo...");
-            }
             void ShowMenu()
             {
                 Console.WriteLine(
@@ -464,7 +463,8 @@ namespace Grafos
                         MainMenuSwitch();
                         break;
                     case "5":
-                        RemoveUndirectedNode();
+                        RemoveNode(undirectedGraphs);
+                        MainMenuSwitch();
                         break;
                     case "6":
                         ModifyNode(undirectedGraphs);
